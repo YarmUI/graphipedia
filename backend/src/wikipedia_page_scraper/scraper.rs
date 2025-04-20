@@ -6,7 +6,7 @@ static NEN_DAI_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"^\d+年代(の.+)?
 static LIST_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"^.+一覧\s?\(.+\)$").unwrap());
 static GATU_NITI_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"^\d+月\d+日$").unwrap());
 static HUHOU_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"^訃報\s\d+年\d+月$").unwrap());
-static REDIRECT_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"^#(REDIRECT|転送)\s\[\[").unwrap());
+static REDIRECT_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"^#(REDIRECT|転送)\s*\[\[").unwrap());
 static LINK_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"\[\[([^#|]+?)([#|]+.+?)?\]\]").unwrap());
 
 pub struct Scraper {

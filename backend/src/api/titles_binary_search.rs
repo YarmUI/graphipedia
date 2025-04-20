@@ -22,7 +22,11 @@ impl TitlesBinalySearch {
       .nodes
       .iter()
       .enumerate()
-      .map(|(i, page)| (page.title.clone(), i)).collect();
+      .map(|(i, page)| {
+        let lower_case_title = page.title.to_lowercase();
+        return (lower_case_title, i);
+      })
+      .collect();
 
     sorted_title.sort_by(|a, b| a.0.cmp(&b.0));
 
