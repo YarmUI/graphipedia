@@ -1,0 +1,16 @@
+[package]
+name = "graphipedia"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.8.3"
+bincode = "1.3.3"
+indicatif = "0.17.11"
+once_cell = "1.21.3"
+quick-xml = "0.37.4"
+rand = "0.9.1"
+rayon = "1.10.0"
+regex = "1.11.1"
+serde = { version = "1.0.219", features = ["derive"] }
+tokio = { version = "1.44.2", features = ["macros", "rt-multi-thread"] }
