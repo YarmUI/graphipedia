@@ -51,8 +51,8 @@ pub async fn shortest_path(
   let enable_date_related = params.enable_date_related.unwrap_or(false);
   let enable_list_article = params.enable_list_article.unwrap_or(false);
 
-  let start_index = state.titles_binary_search.index_of(&start);
-  let end_index = state.titles_binary_search.index_of(&end);
+  let start_index = Some(0);//state.titles_binary_search.index_of(&start);
+  let end_index = Some(0);//state.titles_binary_search.index_of(&end);
 
   if start_index.is_none() || end_index.is_none() {
     return (

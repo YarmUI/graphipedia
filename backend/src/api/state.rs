@@ -1,15 +1,12 @@
 use std::sync::Arc;
 pub struct State {
   pub graph: Arc<crate::graph::Graph>,
-  pub titles_binary_search: Arc<crate::api::TitlesBinalySearch>,
+  pub title_search: Arc<crate::title_search::TitleSearch>,
 }
 
 impl State {
   pub fn new(graph: Arc<crate::graph::Graph>) -> Self {
-    let titles_binary_search = Arc::new(crate::api::TitlesBinalySearch::new(graph.clone()));
-    State {
-      graph,
-      titles_binary_search,
-    }
+    let title_search = Arc::new(crate::title_search::TitleSearch::new(graph.clone()));
+    State { graph, title_search }
   }
 }
