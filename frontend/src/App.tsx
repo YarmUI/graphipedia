@@ -6,7 +6,6 @@ import TitleSearchField from "./client/components/TitleSearchField"
 import Graph from "./client/components/Graph"
 import type { SearchGraphQuery } from './shared/types/search_graph';
 import { useState } from 'react';
-//import { useNavigate, useLocation } from 'react-router-dom';
 
 function App() {
 
@@ -33,9 +32,13 @@ function App() {
   return (
     <>
       <Container maxWidth="xl">
-        <Box>
+        <Stack
+          justifyContent="center"
+          alignItems="center"
+          sx={{ width: '100%' }}
+        >
           <Graph query={query} />
-        </Box>
+        </Stack>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           spacing={2}
