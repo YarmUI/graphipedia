@@ -2,6 +2,7 @@ use indicatif::ProgressBar;
 use indicatif::ProgressStyle;
 use std::collections::HashMap;
 use rayon::prelude::*;
+use std::env;
 
 fn get_title_to_id_map(path: &str, total_pages: u64) -> HashMap<String, u32> {
   println!("Reading title from XML file: {}", path);
@@ -152,12 +153,24 @@ fn export_graph(graph: &graphipedia::graph::Graph, path: &str) {
 }
 
 fn main() {
-  let path = "jawiki-20250320-pages-articles-multistream.xml";
+  let args: Vec<String> = env::args().collect();
+  let input_path = if args.len() > 1 {
+    &args[1]
+  } else {
+    "jawiki-20250320-pages-articles-multistream.xml"
+  };
+
+  let output_path = if args.len() > 2 {
+    &args[2]
+  } else {
+    "graph.bin"
+  };
+
   let total_pages = 300_0000;
-  let title_to_id_map = get_title_to_id_map(path, total_pages);
-  let pages = get_scraped_pages(path, title_to_id_map, total_pages);
+  let title_to_id_map = get_title_to_id_map(input_path, total_pages);
+  let pages = get_scraped_pages(input_path, title_to_id_map, total_pages);
   let (links, reverse_links) = generate_links(&pages);
   let graph = gen_graph(&pages, &links, &reverse_links);
 
-  export_graph(&graph, "graph.bin");
+  export_graph(&graph, output_path);
 }
