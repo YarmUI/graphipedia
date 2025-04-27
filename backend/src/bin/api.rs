@@ -18,7 +18,7 @@ async fn main() {
   let app = Router::new()
     .route("/", get(|| async { "graphipedia" }))
     .route("/api/search", get(graphipedia::api::search)).with_state(state.clone())
-    .route("/api/shortest_path", get(graphipedia::api::shortest_path)).with_state(state.clone());
+    .route("/api/graph_search", get(graphipedia::api::graph_search)).with_state(state.clone());
 
   let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
 

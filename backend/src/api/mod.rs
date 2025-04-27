@@ -4,4 +4,4 @@ mod graph;
 
 pub use state::State;
 pub use search::search;
-pub use graph::shortest_path;
+pub use graph::graph_search;
