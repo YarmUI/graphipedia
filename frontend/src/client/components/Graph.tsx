@@ -2,7 +2,7 @@ import useSearchGraphResult from '../hooks/useSearchGraphResult';
 import type { SearchGraphQuery, SearchGraphResult } from '../../shared/types/search_graph';
 import { SigmaContainer, useLoadGraph } from '@react-sigma/core';
 import Graph from 'graphology';
-import { forwardRef, useImperativeHandle, useEffect, useRef, FC, use } from "react";
+import { forwardRef, useImperativeHandle, useEffect, useRef, FC } from "react";
 import { useState, useLayoutEffect } from 'react';
 import { useWorkerLayoutForceAtlas2 } from '@react-sigma/layout-forceatlas2';
 import { hslToRgb, rgbToHex } from '@mui/system';
