@@ -2,7 +2,7 @@ import useSearchGraphResult from '../hooks/useSearchGraphResult';
 import type { SearchGraphQuery, SearchGraphResult } from '../../shared/types/search_graph';
 import { SigmaContainer, useLoadGraph } from '@react-sigma/core';
 import Graph from 'graphology';
-import { forwardRef, useImperativeHandle, useEffect, useRef, FC } from "react";
+import { forwardRef, useImperativeHandle, useEffect, useRef, FC, use } from "react";
 import { useState, useLayoutEffect } from 'react';
 import { useWorkerLayoutForceAtlas2 } from '@react-sigma/layout-forceatlas2';
 import { hslToRgb, rgbToHex } from '@mui/system';
@@ -84,12 +84,66 @@ export default ({query}: {query: SearchGraphQuery | null }) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const [boxWidth, setBoxWidth] = useState<number>(300);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errMsg, setErrMsg] = useState<string | null>(null);
+  const [isRouteFound, setIsRouteFound] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (loading) {
+      setIsLoading(true);
+      setErrMsg(null);
+      setIsRouteFound(false);
+      return;
+    }
+
+    if (data && data.route_found) {
+      setIsLoading(false);
+      setErrMsg(null);
+      setIsRouteFound(true);
+      return;
+    }
+
+    if (data && data.start_not_found) {
+      setErrMsg(`${query?.start}が見つかりませんでした。`);
+      setIsLoading(false);
+      setIsRouteFound(false);
+      return;
+    }
+
+    if (data && data.end_not_found) {
+      setErrMsg(`${query?.end}が見つかりませんでした。`);
+      setIsLoading(false);
+      setIsRouteFound(false);
+      return;
+    }
+
+    if (data && !data.route_found) {
+      setErrMsg('ルートが見つかりませんでした。');
+      setIsLoading(false);
+      setIsRouteFound(false);
+      return;
+    }
+
+  }, [loading, data]);
+
+  const graphWidth = () => {
+    if (isXs) return boxWidth;
+    else if (isSm) return 600;
+    else if (isMd) return 900;
+    else if (isLg) return 1200;
+    else if (isXl) return 1200;
+  }
+
+  const graphHeight = () => {
+    if (isXs) return 350;
+    else if (isSm) return 500;
+    else if (isMd) return 500;
+    else if (isLg) return 500;
+    else if (isXl) return 500;
+  }
+
   const sigmaStyle = () => {
-    if (isXs) return { width: boxWidth, height: 400 };
-    else if (isSm) return { width: 600, height: 400 };
-    else if (isMd) return { width: 900, height: 400 };
-    else if (isLg) return { width: 1200, height: 500 };
-    else if (isXl) return { width: 1200, height: 500 };
+    return { width: graphWidth(), height: graphHeight() }
   };
 
   useLayoutEffect(() => {
@@ -110,8 +164,25 @@ export default ({query}: {query: SearchGraphQuery | null }) => {
 
   return (
     <>
-      {loading && <p>Loading...</p>}
-      {data && (
+      {!isLoading && !isRouteFound && !errMsg && (
+        <Box
+          sx={{
+            width: '100%',
+            height: "400px",
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center', // 縦方向中央
+            alignItems: 'center',     // 横方向中央
+          }}
+          ref={boxRef}
+        >
+          <Typography variant="h6" align="center">
+            スタートの記事からゴールの記事までのWikipediaのリンクを探索します。
+          </Typography>
+        </Box>
+      )}
+      {isLoading && <p>Loading...</p>}
+      {data && isRouteFound && (
         <>
           <Box sx={{ width: '100%' }} ref={boxRef}>
             <Typography variant="h6" align="center">
@@ -131,8 +202,13 @@ export default ({query}: {query: SearchGraphQuery | null }) => {
           </Box>
         </>
       )}
-      {!query && <p>Please enter a start and end title to see the graph.</p>}
-      {query && !loading && !data && <p>No data available</p>}
+      {errMsg && (
+        <Box sx={{ width: '100%' }} ref={boxRef}>
+          <Typography variant="h6" align="center" color="error">
+            {errMsg}
+          </Typography>
+        </Box>
+      )}
     </>
   )
 }
