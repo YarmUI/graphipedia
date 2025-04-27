@@ -8,13 +8,14 @@ fn main() {
   let mut buf = Vec::new();
   file.read_to_end(&mut buf).unwrap();
   let graph: graphipedia::graph::Graph = bincode::deserialize(&buf).unwrap();
+  let graph = Arc::new(graph);
   let title_to_index_map: std::collections::HashMap<String, usize> = graph.nodes
     .iter()
     .enumerate()
     .map(|(i, page)| (page.title.clone(), i))
     .collect();
+  let title_to_index_map = Arc::new(title_to_index_map);
 
-    let graph = Arc::new(graph);
   loop {
     let mut start = String::new();
     println!("Enter start page title (or 'exit' to quit):");
@@ -35,36 +36,27 @@ fn main() {
         println!("Invalid end page title.");
         continue;
     }
+    let query = graphipedia::graph::GraphSearchQuery {
+        start: start.to_string(),
+        end: end.to_string(),
+        enable_date_related: Some(false),
+        enable_list_article: Some(false),
+    };
 
-    let start_index = title_to_index_map[start];
-    let end_index = title_to_index_map[end];
-    println!("Finding shortest path from {} to {}...", start, end);
-    let mut bfs = graphipedia::graph::BidirectionalZeroOneBfs::new(
+    let mut graph_search = graphipedia::graph::GraphSearch::new(
         graph.clone(),
-        start_index,
-        end_index,
-        false,
-        false,
+        title_to_index_map.clone(),
+        query,
     );
 
-    let result = bfs.exec();
-    println!("duration {:?}, discovered nodes: {}, visited nodes: {}",
-        result.duration,
-        result.discovered_nodes,
-        result.visited_nodes
-    );
-
-    println!("Nodes in shortest path:");
-    for node_index in result.subgraph.nodes {
-      let node = &graph.nodes[node_index.0];
-      println!("title: {}, distance: {}", node.title, node_index.1);
+    let result = graph_search.exec();
+    println!("start: {}, end: {}", start, end);
+    for node in result.nodes {
+      println!("Node: {}(distance: {}, id: {})", node.title, node.distance, node.id);
     }
 
-    println!("Edges in shortest path:");
-    for edge in result.subgraph.edges {
-      let start_node = &graph.nodes[edge.0];
-      let end_node = &graph.nodes[edge.1];
-      println!("{} -> {}", start_node.title, end_node.title);
+    for edge in result.edges {
+      println!("Edge: {} -> {}", edge.0, edge.1);
     }
   }
 }
