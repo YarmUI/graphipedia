@@ -4,17 +4,30 @@ import Button from '@mui/material/Button'
 import TitleSearchField from "./TitleSearchField"
 import Graph from "./Graph"
 import type { SearchGraphQuery } from '../../shared/types/search_graph';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 function App() {
 
   const [query, setQuery] = useState<SearchGraphQuery | null>(null);
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const url_start = searchParams.get('start') || '';
+    const url_end = searchParams.get('end') || '';
+    setStart(url_start);
+    setEnd(url_end);
+    if (url_start && url_end) {
+      setQuery({ start: url_start, end: url_end });
+    }
+  }, []);
 
   const handleSearch = () => {
     if (start && end) {
       setQuery({ start, end });
+      setSearchParams({ start, end });
     }
   };
 
@@ -25,6 +38,7 @@ function App() {
       setStart(_end);
       setEnd(_start);
       setQuery({ start: _end, end: _start });
+      setSearchParams({ start: _end, end: _start });
     }
   };
 
