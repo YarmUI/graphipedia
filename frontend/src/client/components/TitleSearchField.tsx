@@ -5,15 +5,13 @@ import { useState, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-export default ({label, value}: {label?: string, value?: string}) => {
-  const [inputValue, setInputValue] = useState('');
+export default ({label, value, setValue}: {label?: string, value?: string, setValue: (value: string) => void}) => {
   const [query, setQuery] = useState('');
-  const [_value, setValue] = useState(value);
   const { data, loading } = useSearchPageResult({ query: query, limit: 5 });
   const debounceRef = useRef<number | null>(null);
 
   const handleInputChange = (_: any, v: string) => {
-    setInputValue(v);
+    setValue(v);
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
@@ -39,8 +37,8 @@ export default ({label, value}: {label?: string, value?: string}) => {
       options={data?.items || []}
       loading={loading}
       autoHighlight
-      inputValue={inputValue}
-      value={_value}
+      inputValue={value}
+      value={value}
       onChange={handleChange}
       onInputChange={handleInputChange}
       getOptionLabel={(option) => {
