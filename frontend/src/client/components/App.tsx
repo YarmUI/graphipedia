@@ -2,9 +2,9 @@ import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
-import TitleSearchField from "./client/components/TitleSearchField"
-import Graph from "./client/components/Graph"
-import type { SearchGraphQuery } from './shared/types/search_graph';
+import TitleSearchField from "./TitleSearchField"
+import Graph from "./Graph"
+import type { SearchGraphQuery } from '../../shared/types/search_graph';
 import { useState } from 'react';
 
 function App() {
