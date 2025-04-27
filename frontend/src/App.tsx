@@ -6,7 +6,6 @@ function App() {
   return (
     <>
       <Container maxWidth="xl" sx={{ minHeight: '80vh', py: 2 }}>
-        <h1>Movie Search</h1>
         <Box sx={{ width: '100%', maxWidth: 400, margin: '0 auto' }}>
           <TitleSearchField label={"スタート"} />
         </Box>
