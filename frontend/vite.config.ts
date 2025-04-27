@@ -10,7 +10,7 @@ export default defineConfig({
         target: 'http://127.0.0.1:3000',
         changeOrigin: true,
       },
-      '/api/shortest_path': {
+      '/api/search_graph': {
         target: 'http://127.0.0.1:3000',
         changeOrigin: true,
       }

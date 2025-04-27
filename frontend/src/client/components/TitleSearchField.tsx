@@ -1,17 +1,26 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import useSearchPageResult from '../hooks/useSearchPageResult';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-export default ({label, value}: {label?:string, value: string}) => {
+export default ({label, value}: {label?: string, value?: string}) => {
   const [inputValue, setInputValue] = useState('');
+  const [query, setQuery] = useState('');
   const [_value, setValue] = useState(value);
-  const { data, loading } = useSearchPageResult({ query: inputValue, limit: 5 });
+  const { data, loading } = useSearchPageResult({ query: query, limit: 5 });
+  const debounceRef = useRef<number | null>(null);
 
   const handleInputChange = (_: any, v: string) => {
     setInputValue(v);
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    debounceRef.current = window.setTimeout(() => {
+      setQuery(v);
+    }, 300);
   };
 
   const handleChange = (_: any, v: any | null) => {

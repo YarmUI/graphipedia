@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type {  SearchPageResult,  SearchPageQuery } from '../../shared/types/search_page'
+import type { SearchPageResult,  SearchPageQuery } from '../../shared/types/search_page'
 
 const useSearchPageResult = (query: SearchPageQuery) => {
 
