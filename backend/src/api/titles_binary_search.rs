@@ -7,7 +7,7 @@ pub struct TitlesBinalySearch {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct SearchResult {
+pub struct SearchResultItem {
   pub title: String,
   pub id: u32,
   pub is_redirect: bool,
@@ -51,13 +51,14 @@ impl TitlesBinalySearch {
     return None;
   }
 
-  pub fn start_withs(&self, str: &String) -> Vec<SearchResult> {
+  pub fn start_withs(&self, str: &String, limit: usize) -> Vec<SearchResultItem> {
     let mut result = Vec::new();
     let start = self.sorted_title.partition_point(|t| t.0 < *str);
     
     self.sorted_title[start..]
       .iter()
       .take_while(|t| t.0.starts_with(str))
+      .take(limit)
       .for_each(|(_, index)| {
         let node = &self.graph.nodes[*index];
 
@@ -72,7 +73,7 @@ impl TitlesBinalySearch {
         let link_count = (node.forward_edge_range.1 - node.forward_edge_range.0) + (node.backward_edge_range.1 - node.backward_edge_range.0);
 
         result.push(
-          SearchResult {
+          SearchResultItem {
             title: node.title.clone(),
             id: node.id,
             is_redirect: node.is_redirect,
