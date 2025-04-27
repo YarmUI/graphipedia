@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import TitleSearchField from "./TitleSearchField"
@@ -31,39 +30,37 @@ function App() {
 
   return (
     <>
-      <Container maxWidth="xl">
-        <Stack
-          justifyContent="center"
-          alignItems="center"
-          sx={{ width: '100%' }}
-        >
-          <Graph query={query} />
-        </Stack>
-        <Stack
-          direction={{ xs: 'column', md: 'row' }}
-          spacing={2}
-          justifyContent="center"
-          alignItems="center"
-          sx={{ width: '100%' }}
-        >
-          <Box sx={{ width: '100%', maxWidth: 400 }}>
-            <TitleSearchField label={"スタート"} value={start} setValue={setStart} />
-          </Box>
-          <Box sx={{ width: '100%', maxWidth: 400 }}>
-            <TitleSearchField label={"ゴール"} value={end} setValue={setEnd} />
-          </Box>
-        </Stack>
-        <Stack
-          direction={{ xs: 'row' }}
-          spacing={1}
-          justifyContent="center"
-          alignItems="center"
-          sx={{ width: '100%', my: 2 }}
-        >
-          <Button variant="contained" onClick={handleSearch}>最短経路を探索</Button>
-          <Button variant="contained" onClick={handleSwap}>入れ替えて探索</Button>
-        </Stack>
-      </Container>
+      <Stack
+        justifyContent="center"
+        alignItems="center"
+        sx={{ width: '100%' }}
+      >
+        <Graph query={query} />
+      </Stack>
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        spacing={2}
+        justifyContent="center"
+        alignItems="center"
+        sx={{ width: '100%' }}
+      >
+        <Box sx={{ width: '100%', maxWidth: 400 }}>
+          <TitleSearchField label={"スタート"} value={start} setValue={setStart} />
+        </Box>
+        <Box sx={{ width: '100%', maxWidth: 400 }}>
+          <TitleSearchField label={"ゴール"} value={end} setValue={setEnd} />
+        </Box>
+      </Stack>
+      <Stack
+        direction={{ xs: 'row' }}
+        spacing={1}
+        justifyContent="center"
+        alignItems="center"
+        sx={{ width: '100%', my: 2 }}
+      >
+        <Button variant="contained" onClick={handleSearch}>最短経路を探索</Button>
+        <Button variant="contained" onClick={handleSwap}>入れ替えて探索</Button>
+      </Stack>
     </>
   )
 }

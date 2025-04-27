@@ -85,8 +85,8 @@ export default ({query}: {query: SearchGraphQuery | null }) => {
   const [boxWidth, setBoxWidth] = useState<number>(300);
 
   const sigmaStyle = () => {
-    if (isXs) return { width: boxWidth, height: 300 };
-    else if (isSm) return { width: 600, height: 300 };
+    if (isXs) return { width: boxWidth, height: 400 };
+    else if (isSm) return { width: 600, height: 400 };
     else if (isMd) return { width: 900, height: 400 };
     else if (isLg) return { width: 1200, height: 500 };
     else if (isXl) return { width: 1200, height: 500 };
