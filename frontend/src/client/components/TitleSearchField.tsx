@@ -1,7 +1,7 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import useSearchPageResult from '../hooks/useSearchPageResult';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
@@ -30,6 +30,10 @@ export default ({label, value, setValue}: {label?: string, value?: string, setVa
       setValue('');
     }
   };
+
+  useEffect(() => {
+    value && setQuery(value);
+  }, [value]);
 
   return (
     <Autocomplete
