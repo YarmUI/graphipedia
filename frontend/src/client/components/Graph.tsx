@@ -12,7 +12,7 @@ import { useTheme, useMediaQuery, Typography } from '@mui/material';
 
 const WikipediaGraph: FC<{ data: SearchGraphResult | null }> = ({ data }: {data: SearchGraphResult | null}) => {
   const loadGraph = useLoadGraph();
-  const { positions, assign } = useLayoutForceAtlas2({ iterations: 100, settings: { barnesHutOptimize: true, scalingRatio: 0.5, adjustSizes: true } });
+  const { positions, assign } = useLayoutForceAtlas2({ iterations: 300, settings: { scalingRatio: 0.5, adjustSizes: true } });
 
   useEffect(() => {
     if (!data) return;
