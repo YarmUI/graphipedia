@@ -2,31 +2,17 @@ import useSearchGraphResult from '../hooks/useSearchGraphResult';
 import type { SearchGraphQuery, SearchGraphResult } from '../../shared/types/search_graph';
 import { SigmaContainer, useLoadGraph } from '@react-sigma/core';
 import Graph from 'graphology';
-import { forwardRef, useImperativeHandle, useEffect, useRef, FC } from "react";
+import { useEffect, useRef, FC } from "react";
 import { useState, useLayoutEffect } from 'react';
-import { useWorkerLayoutForceAtlas2 } from '@react-sigma/layout-forceatlas2';
+import { useLayoutForceAtlas2 } from '@react-sigma/layout-forceatlas2';
 import { hslToRgb, rgbToHex } from '@mui/system';
 import "@react-sigma/core/lib/style.css";
 import Box from '@mui/material/Box'; 
 import { useTheme, useMediaQuery, Typography } from '@mui/material';
 
-const Fa2 = forwardRef((_props, ref) => {
-  const { start, kill, stop } = useWorkerLayoutForceAtlas2({ settings: { slowDown: 10 } });
-
-  useImperativeHandle(ref, () => ({ start, stop }));
-  useEffect(() => {
-    start();
-
-    return () => {
-      kill();
-    };
-  }, [start, kill, stop]);
-
-  return null;
-});
-
 const WikipediaGraph: FC<{ data: SearchGraphResult | null }> = ({ data }: {data: SearchGraphResult | null}) => {
   const loadGraph = useLoadGraph();
+  const { positions, assign } = useLayoutForceAtlas2({ iterations: 100, settings: { barnesHutOptimize: true, scalingRatio: 0.5, adjustSizes: true } });
 
   useEffect(() => {
     if (!data) return;
@@ -40,9 +26,17 @@ const WikipediaGraph: FC<{ data: SearchGraphResult | null }> = ({ data }: {data:
       const hsl = `hsl(${hue.toFixed(0)}, 80%, 70%)`;
       const rgb = hslToRgb(hsl);  
 
-      let x = Math.random();
+      let x = Math.random() + (node.distance + 1) * 5.0;
       let y = Math.random();
       let size = 10;
+
+      if(node.id == data.start_node.id) {
+        size = 20;
+      }
+
+      if (node.id == data.end_node.id) {
+        size = 20;
+      }
 
       graph.addNode(node.id, {
         label: node.title,
@@ -58,7 +52,8 @@ const WikipediaGraph: FC<{ data: SearchGraphResult | null }> = ({ data }: {data:
     });
 
     loadGraph(graph);
-  }, [loadGraph, data]);
+    assign();
+  }, [loadGraph, data, assign, positions]);
 
   return null;
 };
@@ -74,7 +69,6 @@ const sigmaSettings = {
 
 export default ({query}: {query: SearchGraphQuery | null }) => {
   const { data, loading } = useSearchGraphResult(query);
-  const fa2Ref = useRef<{ start: () => void; kill: () => void; stop: () => void }>(null);
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.only('xs'));
   const isSm = useMediaQuery(theme.breakpoints.only('sm'));
@@ -152,16 +146,6 @@ export default ({query}: {query: SearchGraphQuery | null }) => {
     }
   }, [isXs, data, loading]);
 
-  useEffect(() => {
-    if (fa2Ref.current) {
-      fa2Ref.current.start();
-
-      setTimeout(() => {
-        fa2Ref.current?.stop();
-      }, 3000);
-    }
-  }, [fa2Ref, data]);
-
   return (
     <>
       {!isLoading && !isRouteFound && !errMsg && (
@@ -171,8 +155,8 @@ export default ({query}: {query: SearchGraphQuery | null }) => {
             height: "400px",
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center', // 縦方向中央
-            alignItems: 'center',     // 横方向中央
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
           ref={boxRef}
         >
@@ -197,7 +181,6 @@ export default ({query}: {query: SearchGraphQuery | null }) => {
           <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }} ref={boxRef}>
             <SigmaContainer style={sigmaStyle()} settings={sigmaSettings}>
               <WikipediaGraph data={data} />
-              <Fa2 ref={fa2Ref} />
             </SigmaContainer>
           </Box>
         </>
