@@ -1,0 +1,15 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: .deploy/nginx/Dockerfile
+    ports:
+      - "8080:80"
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    expose:
+      - "3000"
+    volumes:
+      - ./data/graph.bin:/app/graph.bin:ro
