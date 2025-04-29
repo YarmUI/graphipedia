@@ -7,6 +7,14 @@ import "@react-sigma/core/lib/style.css";
 import Box from '@mui/material/Box'; 
 import { useTheme, useMediaQuery, Typography } from '@mui/material';
 import WikipediaGraph from './WikipediaGraph';
+import {
+  TwitterShareButton,
+  TwitterIcon,
+  LineShareButton,
+  LineIcon,
+  HatenaShareButton,
+  HatenaIcon
+} from 'react-share';
 
 const sigmaSettings = {
   allowInvalidContainer: true,
@@ -79,11 +87,11 @@ export default ({query}: {query: SearchGraphQuery | null }) => {
   }
 
   const graphHeight = () => {
-    if (isXs) return 350;
-    else if (isSm) return 500;
-    else if (isMd) return 500;
-    else if (isLg) return 500;
-    else if (isXl) return 500;
+    if (isXs) return 330;
+    else if (isSm) return 480;
+    else if (isMd) return 480;
+    else if (isLg) return 480;
+    else if (isXl) return 480;
   }
 
   const sigmaStyle = () => {
@@ -132,6 +140,29 @@ export default ({query}: {query: SearchGraphQuery | null }) => {
             <SigmaContainer style={sigmaStyle()} settings={sigmaSettings}>
               <WikipediaGraph data={data} />
             </SigmaContainer>
+          </Box>
+          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', py: 1 }}>
+            <Box sx={{ width: graphWidth(), display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+              <TwitterShareButton
+                url={window.location.href}
+                title={`${data.start_node.title}から${data.end_node.title}へは${data.end_node.distance}リンクで到達できます。`}
+                hashtags={['Graphipedia']}
+              >
+                <TwitterIcon size={32} round />
+              </TwitterShareButton>
+              <LineShareButton
+                url={window.location.href}
+                title={`${data.start_node.title}から${data.end_node.title}へは${data.end_node.distance}リンクで到達できます。`}
+              >
+                <LineIcon size={32} round />
+              </LineShareButton>
+              <HatenaShareButton
+                url={window.location.href}
+                title={`${data.start_node.title}から${data.end_node.title}へは${data.end_node.distance}リンクで到達できます。`}
+              >
+                <HatenaIcon size={32} round />
+              </HatenaShareButton>
+            </Box>
           </Box>
         </>
       )}
