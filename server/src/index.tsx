@@ -1,14 +1,14 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { serveStatic } from '@hono/node-server/serve-static'
-import { Page } from './views/Page'
+import { Page } from './views/Page.js'
 import { chromium } from 'playwright'
 import * as fs from 'fs'
 
 const app = new Hono()
 const isDev = process.env.NODE_ENV === 'development'
 
-const manifest_path = isDev ? '../frontend/dist/.vite/manifest.json' : 'manifest.json'
+const manifest_path = isDev ? '../frontend/dist/.vite/manifest.json' : '/app/vite/manifest.json'
 const manifestStr = fs.readFileSync(manifest_path, 'utf-8')
 const manifest = JSON.parse(manifestStr)
 const entry = manifest['index.html']
@@ -16,6 +16,11 @@ const jsPath = entry.file
 const cssPath = entry.css?.[0]
 
 const api_endpoint = process.env.API_ENDPOINT || 'http://localhost:3000'
+
+let browser: any = null
+;(async () => {
+  browser = await chromium.launch()
+})()
 
 if(isDev) {
   app.all('/api/*', async (c) => {
@@ -54,9 +59,11 @@ app.get('/', async (c) => {
     const api_res = await fetch(`${api_endpoint}/api/graph_search?start=${start}&end=${end}`);
     if (api_res.ok) {
       const data = await api_res.json();
-      title = description = `${data.start_node.title}から${data.end_node.title}へは${data.end_node.distance}リンクで到達できます。`;
-      title += " - Graphipedia"
-      image = `https://graphipedia.dog-right.dev/ogp_image${search}`
+      if (data && data.route_found) {
+        title = description = `${data.start_node.title}から${data.end_node.title}へは${data.end_node.distance}リンクで到達できます。`;
+        title += " - Graphipedia"
+        image = `https://graphipedia.dog-right.dev/ogp_image${search}`
+      }
     }
   }
 
@@ -68,15 +75,17 @@ app.get('/snapshot', (c) => {
 });
 
 app.get('/ogp_image', async (c) => {
+  if (!browser) {
+    return new Response('Browser not ready', { status: 503 })
+  }
   const search = c.req.url.includes('?') ? c.req.url.substring(c.req.url.indexOf('?')) : ''
   const snapshotUrl = `${process.env.ROOT_URL || 'http://localhost:3001'}/snapshot${search}`
 
-  const browser = await chromium.launch()
   const page = await browser.newPage()
-  await page.setViewportSize({ width: 1200, height: 630 }) 
+  await page.setViewportSize({ width: 1200, height: 630 })
   await page.goto(snapshotUrl, { waitUntil: 'networkidle' })
   const imageBuffer = await page.screenshot({ type: 'png' })
-  await browser.close()
+  await page.close()
 
   return new Response(imageBuffer, {
     headers: {

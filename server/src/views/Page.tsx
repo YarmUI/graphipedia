@@ -4,8 +4,8 @@ export function Page({ jsPath, cssPath, title, description, image, url }: { jsPa
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
+        <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-icon.png" />
         <title>{ title }</title>
         <script type="module" src={`/${jsPath}`}></script>
         <link rel="stylesheet" href={`/${cssPath}`} />

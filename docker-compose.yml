@@ -5,6 +5,25 @@ services:
       dockerfile: .deploy/nginx/Dockerfile
     ports:
       - "8080:80"
+    volumes:
+      - vite:/usr/share/vite:ro
+    depends_on:
+      - server
+      - api
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    expose:
+      - '3001'
+    environment:
+      - NODE_ENV=production
+      - ROOT_URL=http://nginx:80
+      - API_ENDPOINT=http://nginx:80
+    depends_on:
+      - api
+    volumes:
+      - vite:/app/vite:ro
   api:
     build:
       context: ./backend
@@ -13,3 +32,5 @@ services:
       - "3000"
     volumes:
       - ./data/graph.bin:/app/graph.bin:ro
+volumes:
+  vite:
