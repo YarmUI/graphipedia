@@ -2,13 +2,14 @@
   "name": "graphipedia-server",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.tsx",
+    "dev": "NODE_ENV=development tsx watch src/index.tsx",
     "build": "tsc",
     "start": "node dist/index.js"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.1",
-    "hono": "^4.7.8"
+    "hono": "^4.7.8",
+    "playwright": "^1.52.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",

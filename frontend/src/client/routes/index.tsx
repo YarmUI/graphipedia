@@ -5,16 +5,15 @@ import {
 } from "react-router-dom";
 
 import Home from '../pages/Home';
-import Layout from '../components/Layout';
+import Snapshot from '../pages/Snapshot';
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path='/' element={<Home />} />
-        </Routes>
-      </Layout>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/snapshot' element={<Snapshot />} />
+      </Routes>
     </BrowserRouter>
   )
 }

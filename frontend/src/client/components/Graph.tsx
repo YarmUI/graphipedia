@@ -1,62 +1,13 @@
 import useSearchGraphResult from '../hooks/useSearchGraphResult';
-import type { SearchGraphQuery, SearchGraphResult } from '../../shared/types/search_graph';
-import { SigmaContainer, useLoadGraph } from '@react-sigma/core';
-import Graph from 'graphology';
-import { useEffect, useRef, FC } from "react";
+import type { SearchGraphQuery } from '../../shared/types/search_graph';
+import { SigmaContainer } from '@react-sigma/core';
+import { useEffect, useRef } from "react";
 import { useState, useLayoutEffect } from 'react';
-import { useLayoutForceAtlas2 } from '@react-sigma/layout-forceatlas2';
-import { hslToRgb, rgbToHex } from '@mui/system';
 import "@react-sigma/core/lib/style.css";
 import Box from '@mui/material/Box'; 
 import { useTheme, useMediaQuery, Typography } from '@mui/material';
+import WikipediaGraph from './WikipediaGraph';
 
-const WikipediaGraph: FC<{ data: SearchGraphResult | null }> = ({ data }: {data: SearchGraphResult | null}) => {
-  const loadGraph = useLoadGraph();
-  const { positions, assign } = useLayoutForceAtlas2({ iterations: 300, settings: { scalingRatio: 0.5, adjustSizes: true } });
-
-  useEffect(() => {
-    if (!data) return;
-    const graph = new Graph();
-
-    data.nodes.forEach(node => {
-      const gamma = 0.3;
-      let t = Math.min(Math.max(node.distance / data.end_node.distance, 0), 1);
-      t = Math.pow(t, gamma);
-      const hue = (1 - t) * 240;
-      const hsl = `hsl(${hue.toFixed(0)}, 80%, 70%)`;
-      const rgb = hslToRgb(hsl);  
-
-      let x = Math.random() + (node.distance + 1) * 5.0;
-      let y = Math.random();
-      let size = 10;
-
-      if(node.id == data.start_node.id) {
-        size = 20;
-      }
-
-      if (node.id == data.end_node.id) {
-        size = 20;
-      }
-
-      graph.addNode(node.id, {
-        label: node.title,
-        size: size,
-        color: rgbToHex(rgb),
-        x: x,
-        y: y,
-      });
-    });
-
-    data.edges.forEach(edge => {
-      graph.addEdge(edge[0], edge[1]);
-    });
-
-    loadGraph(graph);
-    assign();
-  }, [loadGraph, data, assign, positions]);
-
-  return null;
-};
 
 const sigmaSettings = {
   allowInvalidContainer: true,
