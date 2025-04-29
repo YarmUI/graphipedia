@@ -19,6 +19,7 @@
     "graphology-types": "^0.24.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-ga4": "^2.1.0",
     "react-router-dom": "^7.5.2",
     "react-share": "^5.2.2",
     "sigma": "^3.0.1"
