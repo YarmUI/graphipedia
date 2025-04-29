@@ -8,7 +8,6 @@ import Box from '@mui/material/Box';
 import { useTheme, useMediaQuery, Typography } from '@mui/material';
 import WikipediaGraph from './WikipediaGraph';
 
-
 const sigmaSettings = {
   allowInvalidContainer: true,
   defaultEdgeType: 'arrow',

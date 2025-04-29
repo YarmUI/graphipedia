@@ -3,9 +3,9 @@ import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import TitleSearchField from "./TitleSearchField"
 import Graph from "./Graph"
-import type { SearchGraphQuery } from '../../shared/types/search_graph';
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import type { SearchGraphQuery } from '../../shared/types/search_graph'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 function App() {
 
