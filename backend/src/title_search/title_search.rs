@@ -31,6 +31,33 @@ pub struct TitleSearchResultItem {
   pub backward_link_count: usize,
 }
 
+impl From<(&crate::graph::Node, Arc<crate::graph::Graph>)> for TitleSearchResultItem {
+  fn from((page, graph): (&crate::graph::Node, Arc<crate::graph::Graph>)) -> Self {
+    let (redirect_title, redirect_id) = if page.is_redirect {
+      let redirect_index = graph.forward_edges[page.forward_edge_range.0];
+      let redriect_page = &graph.nodes[redirect_index];
+      (Some(redriect_page.title.clone()), Some(redriect_page.id))
+    } else {
+      (None, None)
+    };
+
+    let fowerd_link_count = page.forward_edge_range.1 - page.forward_edge_range.0;
+    let backward_link_count = page.backward_edge_range.1 - page.backward_edge_range.0;
+    let link_count = fowerd_link_count + backward_link_count;
+
+    TitleSearchResultItem {
+      title: page.title.clone(),
+      id: page.id,
+      is_redirect: page.is_redirect,
+      redirected_title: redirect_title,
+      redirected_id: redirect_id,
+      forward_link_count: fowerd_link_count,
+      backward_link_count: backward_link_count,
+      link_count: link_count
+    }
+  }
+}    
+
 impl TitleSearch {
   pub fn new(graph: Arc<crate::graph::Graph>) -> Self {
     let mut sorted_title: Vec<_> = graph

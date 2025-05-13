@@ -1,5 +1,6 @@
 use std::sync::Arc;
 use serde::{Deserialize, Serialize};
+use crate::title_search::TitleSearchResultItem;
 
 pub struct GraphSearch {
   graph: Arc<crate::graph::Graph>,
@@ -30,6 +31,8 @@ pub struct GraphSearchResult {
   pub visited_nodes: u32,
   pub start_node: Option<GraphSearchResultNode>,
   pub end_node: Option<GraphSearchResultNode>,
+  pub start_node_search_result: Option<TitleSearchResultItem>,
+  pub end_node_search_result: Option<TitleSearchResultItem>,
   pub nodes: Vec<GraphSearchResultNode>,
   pub edges: Vec<(u32, u32)>,
   pub start_not_found: bool,
@@ -118,6 +121,8 @@ impl GraphSearch {
         visited_nodes: self.visited_nodes,
         start_node: None,
         end_node: None,
+        start_node_search_result: None,
+        end_node_search_result: None,
         nodes: Vec::new(),
         edges: Vec::new(),
         start_not_found: self.start.is_none(),
@@ -150,6 +155,8 @@ impl GraphSearch {
         visited_nodes: self.visited_nodes,
         start_node: None,
         end_node: None,
+        start_node_search_result: None,
+        end_node_search_result: None,
         nodes: Vec::new(),
         edges: Vec::new(),
         start_not_found: false,
@@ -200,10 +207,20 @@ impl GraphSearch {
       distance_map[self.start.unwrap()],
     ));
 
+    let start_node_search_result = TitleSearchResultItem::from((
+      &self.graph.nodes[self.start.unwrap()],
+      self.graph.clone(),
+    ));
+
     let end_node = GraphSearchResultNode::from((
       &self.graph.nodes[self.end.unwrap()],
       distance_map[self.end.unwrap()],
-    )); 
+    ));
+
+    let end_node_search_result = TitleSearchResultItem::from((
+      &self.graph.nodes[self.end.unwrap()],
+      self.graph.clone(),
+    ));
 
     GraphSearchResult {
       discovered_nodes: self.discovered_nodes,
@@ -217,6 +234,8 @@ impl GraphSearch {
       route_found: distance_map[self.end.unwrap()] != u8::MAX,
       start_node: Some(start_node),
       end_node: Some(end_node),
+      start_node_search_result: Some(start_node_search_result),
+      end_node_search_result: Some(end_node_search_result),
     }
   }
 
