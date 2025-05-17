@@ -1,18 +1,12 @@
-import ClientComponent from "./ClientComponent";
-
-export async function generateMetadata({ searchParams }: { searchParams: { [key: string]: string } }) {
-  const input = searchParams.input || "";
-  return {
-    title: `Page - ${input}`,
-    description: `This page is about ${input}.`,
-  };
-}
+//import fetchTitleSearch from "@/lib/fetchTitleSearch";
+import TitleSearchField from "@/components/TitleSearchField";
 
 export default async function Home({ searchParams }: { searchParams: { input?: string } }) {
-  const initValue = searchParams.input || "";
-  const apiURL = "api/search";
+  //const res = await fetchTitleSearch({ query: "Dog" });
 
   return (
-    <ClientComponent initialValue={initValue} />
+    <div>
+      <TitleSearchField label="Title Search Test" />
+    </div>
   );
 }
