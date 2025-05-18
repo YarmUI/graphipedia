@@ -12,7 +12,15 @@ import fetchTitleSearch from '@/lib/fetchTitleSearch';
 type TitleSearchResultItem = components['schemas']['TitleSearchResultItem'];
 type TitleSearchResult = components['schemas']['TitleSearchResult'];
 
-export default ({ label, value, setValue }: { label?: string, value?: TitleSearchResultItem, setValue?: (value: TitleSearchResultItem) => void }) => {
+export default ({
+  label,
+  value,
+  setValue
+}: {
+  label?: string,
+  value: TitleSearchResultItem | null,
+  setValue?: (value: TitleSearchResultItem | null) => void
+}) => {
   const [inputValue, setInputValue] = useState('');
   const debounceRef = useRef<number | null>(null);
 

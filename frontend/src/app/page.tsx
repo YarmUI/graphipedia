@@ -1,12 +1,13 @@
-//import fetchTitleSearch from "@/lib/fetchTitleSearch";
-import TitleSearchField from "@/components/TitleSearchField";
+import Graphipedia from "@/components/Graphipedia";
+import fetchGraphSearch from "@/lib/fetchGraphSearch";
 
-export default async function Home({ searchParams }: { searchParams: { input?: string } }) {
-  //const res = await fetchTitleSearch({ query: "Dog" });
+export default async function Home({ searchParams }: { searchParams: { start?: string, end?: string } }) {
+  const { start, end } = await searchParams;
+  const data = start && end ? await fetchGraphSearch({ start, end }) : undefined;
 
   return (
     <div>
-      <TitleSearchField label="Title Search Test" />
+      <Graphipedia initialData={data} />
     </div>
   );
 }

@@ -6,8 +6,8 @@ const nextConfig: NextConfig = {
     if (process.env.NODE_ENV === "development") {
       return [
         {
-          source: '/api/search',
-          destination: 'http://localhost:3000/api/search',
+          source: '/api/:path*',
+          destination: 'http://localhost:3000/api/:path*',
         },
       ];
     }
